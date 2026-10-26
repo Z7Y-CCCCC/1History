@@ -166,6 +166,10 @@ export function t(key, params = {}, lang = getLang()) {
 }
 
 export function applyI18n(lang = getLang()) {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.documentElement.classList.add('notranslate');
+  }
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n')
     el.textContent = t(key, {}, lang)
