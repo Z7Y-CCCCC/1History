@@ -61,6 +61,10 @@ CREATE TABLE IF NOT EXISTS import_records (
     id integer PRIMARY KEY AUTOINCREMENT,
     last_import integer,
     data_path text NOT NULL UNIQUE);
+
+CREATE TABLE IF NOT EXISTS settings (
+    key text PRIMARY KEY,
+    value text NOT NULL);
 "#,
             )
             .context("create table")?;
@@ -517,5 +521,25 @@ SELECT
             max_time,
             import_records,
         })
+    }
+
+    pub fn get_setting(&self, key: &str) -> Result<Option<String>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stat = conn.prepare("SELECT value FROM settings WHERE key = ?1")?;
+        let mut rows = stat.query([key])?;
+        if let Some(row) = rows.next()? {
+            Ok(Some(row.get(0)?))
+        } else {
+            Ok(None)
+        }
+    }
+
+    pub fn set_setting(&self, key: &str, value: &str) -> Result<()> {
+        let conn = self.conn.lock().unwrap();
+        conn.execute(
+            "INSERT INTO settings (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = ?2",
+            [key, value],
+        )?;
+        Ok(())
     }
 }

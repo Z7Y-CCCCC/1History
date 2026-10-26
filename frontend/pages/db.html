@@ -28,6 +28,22 @@
       <div id="status-content"><p style="color:var(--text-muted)" data-i18n="db.loading">Loading...</p></div>
     </div>
 
+        <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h2 style="font-size:16px;font-weight:700;margin-bottom:4px" data-i18n="db.auto_backup_title">Daily Auto Backup (12:00 PM)</h2>
+          <p style="font-size:13px;color:var(--text-muted);margin:0" data-i18n="db.auto_backup_desc">Automatically backup browser history every day at 12:00 PM in background</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label class="switch">
+            <input type="checkbox" id="auto-backup-toggle">
+            <span class="slider"></span>
+          </label>
+          <span id="auto-backup-status" style="font-size:13px;font-weight:500;color:var(--text-muted)" data-i18n="db.auto_backup_status_off">Disabled</span>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
       <h2 style="font-size:16px;font-weight:700;margin-bottom:16px" data-i18n="db.backup_title">Backup</h2>
 

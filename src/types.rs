@@ -124,3 +124,14 @@ pub struct ErrorMessage {
     pub code: u16,
     pub message: String,
 }
+
+#[derive(Debug, Serialize)]
+pub struct ScheduleStatus {
+    pub enabled: bool,
+    pub time: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ScheduleToggleRequest {
+    pub enabled: bool,
+}

@@ -78,7 +78,7 @@ async function loadStatus() {
 }
 
 loadStatus()
-document.getElementById('refresh-status').addEventListener('click', loadStatus)
+document.getElementById('refresh-status').addEventListener('click', () => { loadStatus(); loadSchedule(); })
 
 let pollTimer = null
 
@@ -134,3 +134,52 @@ document.getElementById('start-backup').addEventListener('click', async () => {
     }
   }, 1000)
 })
+
+async function loadSchedule() {
+  try {
+    const res = await fetch('/api/schedule')
+    if (res.ok) {
+      const data = await res.json()
+      const toggle = document.getElementById('auto-backup-toggle')
+      const status = document.getElementById('auto-backup-status')
+      if (toggle && status) {
+        toggle.checked = !!data.enabled
+        status.textContent = data.enabled ? t('db.auto_backup_status_on') : t('db.auto_backup_status_off')
+        status.style.color = data.enabled ? '#16a34a' : 'var(--text-muted)'
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load schedule status:', e)
+  }
+}
+
+const autoBackupToggle = document.getElementById('auto-backup-toggle')
+if (autoBackupToggle) {
+  autoBackupToggle.addEventListener('change', async (e) => {
+    const enabled = e.target.checked
+    const status = document.getElementById('auto-backup-status')
+    if (status) {
+      status.textContent = t('db.loading')
+    }
+    try {
+      const res = await fetch('/api/schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled })
+      })
+      const data = await res.json()
+      if (status) {
+        status.textContent = data.enabled ? t('db.auto_backup_status_on') : t('db.auto_backup_status_off')
+        status.style.color = data.enabled ? '#16a34a' : 'var(--text-muted)'
+      }
+    } catch (err) {
+      console.error('Failed to toggle schedule:', err)
+      if (status) {
+        status.textContent = esc(err.message)
+        status.style.color = 'red'
+      }
+    }
+  })
+}
+
+loadSchedule()

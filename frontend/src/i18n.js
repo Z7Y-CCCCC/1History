@@ -63,6 +63,10 @@ export const translations = {
     'db.summary_imported': 'Imported:',
     'db.summary_duplicates': 'Duplicates:',
     'db.summary_failed_files': 'Failed files:',
+    'db.auto_backup_title': 'Daily Auto Backup (12:00 PM)',
+    'db.auto_backup_desc': 'Automatically backup browser history every day at 12:00 PM in background',
+    'db.auto_backup_status_on': 'Automatic backup is enabled (Daily at 12:00)',
+    'db.auto_backup_status_off': 'Automatic backup is disabled',
 
     // Search page
     'search.filter_placeholder': 'Filter results...',
@@ -132,6 +136,10 @@ export const translations = {
     'db.summary_imported': '已导入:',
     'db.summary_duplicates': '重复跳过:',
     'db.summary_failed_files': '失败文件:',
+    'db.auto_backup_title': '每日自动后台备份 (12:00)',
+    'db.auto_backup_desc': '每天中午 12:00 自动在后台静默抓取 Edge 与 Chrome 历史',
+    'db.auto_backup_status_on': '已开启 (每天 12:00 自动备份)',
+    'db.auto_backup_status_off': '已关闭',
 
     // Search page
     'search.filter_placeholder': '过滤结果...',

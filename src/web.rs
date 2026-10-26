@@ -3,7 +3,7 @@ use crate::{
     database::Database,
     types::{
         BackupJobResponse, BackupPollResponse, BackupRequest, BackupSummary, ClientError,
-        DetailsQueryParams, ErrorMessage, IndexQueryParams, SearchQueryParams, ServerError,
+        DetailsQueryParams, ErrorMessage, IndexQueryParams, ScheduleStatus, ScheduleToggleRequest, SearchQueryParams, ServerError,
     },
     util::{
         detect_history_files, full_timerange, minijinja_format_as_hms, minijinja_format_as_ymd,
@@ -347,6 +347,55 @@ impl Server {
         }))
     }
 
+    async fn get_schedule(db: Arc<Database>) -> Result<impl Reply, Rejection> {
+        let enabled = db.get_setting("auto_backup").unwrap_or(None).as_deref() == Some("true");
+        Ok(warp::reply::json(&ScheduleStatus {
+            enabled,
+            time: "12:00".to_string(),
+        }))
+    }
+
+    async fn toggle_schedule(
+        db: Arc<Database>,
+        db_file: String,
+        req: ScheduleToggleRequest,
+    ) -> Result<impl Reply, Rejection> {
+        let val = if req.enabled { "true" } else { "false" };
+        let _ = db.set_setting("auto_backup", val);
+
+        #[cfg(windows)]
+        {
+            if req.enabled {
+                if let Ok(current_exe) = std::env::current_exe() {
+                    let exe_str = current_exe.to_string_lossy().to_string();
+                    let _ = std::process::Command::new("schtasks")
+                        .args(&[
+                            "/create",
+                            "/tn",
+                            "1History_AutoBackup",
+                            "/tr",
+                            &format!(r#""{}" backup"#, exe_str),
+                            "/sc",
+                            "daily",
+                            "/st",
+                            "12:00",
+                            "/f",
+                        ])
+                        .output();
+                }
+            } else {
+                let _ = std::process::Command::new("schtasks")
+                    .args(&["/delete", "/tn", "1History_AutoBackup", "/f"])
+                    .output();
+            }
+        }
+
+        Ok(warp::reply::json(&ScheduleStatus {
+            enabled: req.enabled,
+            time: "12:00".to_string(),
+        }))
+    }
+
     // https://github.com/ItsNothingPersonal/warp-postgres-example/blob/main/src/main.rs#L63
     fn serve(&self) -> Result<()> {
         let index = warp::path::end()
@@ -380,6 +429,18 @@ impl Server {
             .and(Self::with_jobs(self.jobs.clone()))
             .and_then(Self::poll_backup);
 
+        let schedule_get = warp::path!("api" / "schedule")
+            .and(warp::get())
+            .and(Self::with_db(self.db.clone()))
+            .and_then(Self::get_schedule);
+
+        let schedule_post = warp::path!("api" / "schedule")
+            .and(warp::post())
+            .and(Self::with_db(self.db.clone()))
+            .and(Self::with_db_file(self.db_file.clone()))
+            .and(warp::body::json())
+            .and_then(Self::toggle_schedule);
+
         let db_page = warp::path("db").and(warp::path::end()).map(|| {
             let asset = Asset::get("db.html").unwrap();
             reply::html(String::from_utf8_lossy(&asset.data).to_string())
@@ -394,12 +455,34 @@ impl Server {
             .or(db_status_route)
             .or(backup_start)
             .or(backup_poll)
+            .or(schedule_get)
+            .or(schedule_post)
             .or(db_page)
             .or(index)
             .or(static_route)
             .recover(Self::handle_rejection);
 
         let rt = Runtime::new().context("tokio runtime build")?;
+        let db_for_sched = self.db.clone();
+        let db_file_for_sched = self.db_file.clone();
+        rt.spawn(async move {
+            let mut last_backup_day = String::new();
+            loop {
+                tokio::time::sleep(tokio::time::Duration::from_secs(30)).await;
+                if db_for_sched.get_setting("auto_backup").unwrap_or(None).as_deref() == Some("true") {
+                    let now = chrono::Local::now();
+                    let today = now.format("%Y-%m-%d").to_string();
+                    if now.format("%H:%M").to_string() == "12:00" && last_backup_day != today {
+                        last_backup_day = today;
+                        let files = detect_history_files();
+                        let db_path = db_file_for_sched.clone();
+                        let _ = tokio::task::spawn_blocking(move || {
+                            let _ = backup(files, db_path, false, None);
+                        }).await;
+                    }
+                }
+            }
+        });
         rt.block_on(async {
             info!("Start HTTP server on {}...", self.addr);
             warp::serve(routes).run(self.addr).await;
