@@ -1,6 +1,10 @@
 import './style.css'
 import { Virtualizer, observeElementRect, observeElementOffset, elementScroll } from '@tanstack/virtual-core'
 import { initTheme, toggleTheme } from './theme.js'
+import { applyI18n, setupLangToggle, t } from './i18n.js'
+
+applyI18n()
+setupLangToggle(() => window.location.reload())
 
 const d = window.__SERVER_DATA__
 
@@ -22,7 +26,7 @@ const filterInput = document.getElementById('filter-input')
 const countEl = document.getElementById('result-count')
 
 function updateCount() {
-  countEl.textContent = `${filtered.length.toLocaleString()} records`
+  countEl.textContent = t('search.records_count', { count: filtered.length.toLocaleString() })
 }
 updateCount()
 

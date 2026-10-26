@@ -12,12 +12,13 @@
     <a class="nav-brand" href="/">1History</a>
     <div style="display:flex;align-items:center;gap:10px">
       <input id="date-range" class="card" style="width:240px;cursor:pointer;font-size:13px;padding:6px 10px" readonly placeholder="Date range">
-      <input id="keyword" type="search" placeholder="Search..." style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;width:220px">
-      <button class="btn" id="submit">Search</button>
+      <input id="keyword" type="search" placeholder="Search..." data-i18n-placeholder="nav.search_placeholder" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;width:220px">
+      <button class="btn" id="submit" data-i18n="nav.search_btn">Search</button>
       <a id="view-list" class="btn-outline" target="_blank" style="text-decoration:none">
-        List <span id="view-list-count"></span>
+        <span data-i18n="nav.list_btn">List</span> <span id="view-list-count"></span>
       </a>
-      <a href="/db" class="btn-outline" style="text-decoration:none">DB</a>
+      <a href="/db" class="btn-outline" style="text-decoration:none" data-i18n="nav.db">DB</a>
+      <button id="lang-toggle" class="btn-outline" style="font-size:12px;padding:4px 8px" title="Language">中文</button>
       <button id="theme-toggle" class="btn-outline" title="Toggle theme">🌙</button>
     </div>
   </nav>
@@ -26,19 +27,19 @@
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
       <div class="card" style="text-align:center">
         <div style="font-size:28px;font-weight:700;color:var(--accent)" id="kpi-total">—</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Total Visits</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" data-i18n="kpi.total_visits">Total Visits</div>
       </div>
       <div class="card" style="text-align:center">
         <div style="font-size:28px;font-weight:700;color:var(--accent)" id="kpi-domains">—</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Unique Domains</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" data-i18n="kpi.unique_urls">Unique Domains</div>
       </div>
       <div class="card" style="text-align:center">
         <div style="font-size:28px;font-weight:700;color:var(--accent)" id="kpi-days">—</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Active Days</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" data-i18n="kpi.active_days">Active Days</div>
       </div>
       <div class="card" style="text-align:center">
         <div style="font-size:28px;font-weight:700;color:var(--accent)" id="kpi-today">—</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Today</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" data-i18n="kpi.today">Today</div>
       </div>
     </div>
 
@@ -53,19 +54,19 @@
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
       <div class="card">
-        <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">TOP 100 by title</h3>
+        <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="table.top100_title">TOP 100 by title</h3>
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Count</th><th>Title</th></tr></thead>
+            <thead><tr><th data-i18n="table.count">Count</th><th data-i18n="table.title">Title</th></tr></thead>
             <tbody id="title-table"></tbody>
           </table>
         </div>
       </div>
       <div class="card">
-        <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">TOP 100 by domain</h3>
+        <h3 style="font-size:14px;font-weight:600;margin-bottom:12px" data-i18n="table.top100_domain">TOP 100 by domain</h3>
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Count</th><th>Domain</th></tr></thead>
+            <thead><tr><th data-i18n="table.count">Count</th><th data-i18n="table.domain">Domain</th></tr></thead>
             <tbody id="domain-table"></tbody>
           </table>
         </div>

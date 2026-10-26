@@ -1,6 +1,10 @@
 import './style.css'
 import { initTheme, toggleTheme } from './theme.js'
 import { initDailyChart, initPieChart } from './charts.js'
+import { applyI18n, setupLangToggle, t } from './i18n.js'
+
+applyI18n()
+setupLangToggle(() => window.location.reload())
 
 const d = window.__SERVER_DATA__
 
@@ -47,11 +51,11 @@ initDailyChart(
   d.dailyCounts,
   (ymd) => window.open(`/details/${ymd}?keyword=${encodeURIComponent(d.keyword)}`, '_blank')
 )
-initPieChart(document.getElementById('title-pie'), d.titleTop100, 'Top 10 Pages', null)
+initPieChart(document.getElementById('title-pie'), d.titleTop100, t('chart.top10_pages'), null)
 initPieChart(
   document.getElementById('domain-pie'),
   d.domainTop100,
-  'Top 10 Domains',
+  t('chart.top10_domains'),
   (domain) => {
     document.getElementById('keyword').value = domain
     doSearch()

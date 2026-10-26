@@ -5,6 +5,7 @@ import {
   GridComponent, DataZoomComponent, ToolboxComponent,
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
+import { t } from './i18n.js'
 
 echarts.use([
   LineChart, PieChart,
@@ -22,12 +23,12 @@ export function initDailyChart(el, data, onClickDate) {
   const chart = echarts.init(el)
   chart.setOption({
     color: [getAccentColor()],
-    title: { text: 'Daily Page Views', textStyle: { fontSize: 14, fontWeight: 500 } },
+    title: { text: t('chart.daily_pv'), textStyle: { fontSize: 14, fontWeight: 500 } },
     tooltip: {
       trigger: 'axis',
       formatter: (params) => {
         const d = new Date(params[0].value[0])
-        return `${d.toLocaleDateString()}<br/>PV: ${params[0].value[1]}`
+        return `${d.toLocaleDateString()}<br/>${t('chart.pv_label')}: ${params[0].value[1]}`
       },
     },
     toolbox: { feature: { saveAsImage: { show: true }, dataView: { show: true, readOnly: true } } },
@@ -35,7 +36,7 @@ export function initDailyChart(el, data, onClickDate) {
     xAxis: { type: 'time' },
     yAxis: { type: 'value' },
     series: [{
-      name: 'Page View',
+      name: t('chart.pv'),
       type: 'line',
       showAllSymbol: 'auto',
       data: data.map(([ts, cnt]) => [new Date(ts), cnt]),

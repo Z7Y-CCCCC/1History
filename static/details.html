@@ -11,16 +11,17 @@
   <nav>
     <div style="display:flex;align-items:center;gap:16px">
       <a class="nav-brand" href="/">1History</a>
-      <a href="/details/{{ format_as_ymd(ymd_ts - 3600000*24) }}?{{ {"keyword": keyword} | urlencode }}" class="btn-outline" style="text-decoration:none;font-size:12px">← Yesterday</a>
+      <a href="/details/{{ format_as_ymd(ymd_ts - 3600000*24) }}?{{ {"keyword": keyword} | urlencode }}" class="btn-outline" style="text-decoration:none;font-size:12px" data-i18n="nav.yesterday">← Yesterday</a>
       <span style="font-weight:600">{{ ymd }}</span>
-      <a href="/details/{{ format_as_ymd(ymd_ts + 3600000*24) }}?{{ {"keyword": keyword} | urlencode }}" class="btn-outline" style="text-decoration:none;font-size:12px">Tomorrow →</a>
+      <a href="/details/{{ format_as_ymd(ymd_ts + 3600000*24) }}?{{ {"keyword": keyword} | urlencode }}" class="btn-outline" style="text-decoration:none;font-size:12px" data-i18n="nav.tomorrow">Tomorrow →</a>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-      <input id="keyword" type="search" placeholder="Filter..."
+      <input id="keyword" type="search" placeholder="Filter..." data-i18n-placeholder="nav.filter_placeholder"
         style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px"
         value="{{ keyword }}">
-      <button class="btn" id="submit">Search</button>
-      <span style="color:var(--text-muted);font-size:13px">{{ visit_details | length }} results</span>
+      <button class="btn" id="submit" data-i18n="nav.search_btn">Search</button>
+      <span id="details-count" data-count="{{ visit_details | length }}" style="color:var(--text-muted);font-size:13px">{{ visit_details | length }} results</span>
+      <button id="lang-toggle" class="btn-outline" style="font-size:12px;padding:4px 8px" title="Language">中文</button>
       <button id="theme-toggle" class="btn-outline" title="Toggle theme">🌙</button>
     </div>
   </nav>
@@ -28,7 +29,7 @@
   <div style="padding:24px;max-width:1200px;margin:0 auto">
     <div class="card" style="padding:0;overflow:hidden">
       <table>
-        <thead><tr><th style="width:120px">Time</th><th>Title</th></tr></thead>
+        <thead><tr><th style="width:120px" data-i18n="table.time">Time</th><th data-i18n="table.title">Title</th></tr></thead>
         <tbody>
           {% for detail in visit_details %}
           <tr>

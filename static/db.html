@@ -11,48 +11,51 @@
   <nav>
     <div style="display:flex;align-items:center;gap:16px">
       <a class="nav-brand" href="/">1History</a>
-      <span style="color:var(--text-muted);font-size:13px">Database Management</span>
+      <span style="color:var(--text-muted);font-size:13px" data-i18n="nav.db_management">Database Management</span>
     </div>
-    <button id="theme-toggle" class="btn-outline" title="Toggle theme">🌙</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button id="lang-toggle" class="btn-outline" style="font-size:12px;padding:4px 8px" title="Language">中文</button>
+      <button id="theme-toggle" class="btn-outline" title="Toggle theme">🌙</button>
+    </div>
   </nav>
 
   <div style="padding:24px;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h2 style="font-size:16px;font-weight:700">Database Status</h2>
-        <button class="btn-outline" id="refresh-status" style="font-size:12px">Refresh</button>
+        <h2 style="font-size:16px;font-weight:700" data-i18n="db.status_title">Database Status</h2>
+        <button class="btn-outline" id="refresh-status" style="font-size:12px" data-i18n="db.refresh">Refresh</button>
       </div>
-      <div id="status-content"><p style="color:var(--text-muted)">Loading...</p></div>
+      <div id="status-content"><p style="color:var(--text-muted)" data-i18n="db.loading">Loading...</p></div>
     </div>
 
     <div class="card">
-      <h2 style="font-size:16px;font-weight:700;margin-bottom:16px">Backup</h2>
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:16px" data-i18n="db.backup_title">Backup</h2>
 
       <div style="margin-bottom:12px">
-        <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px">
+        <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px" data-i18n="db.extra_files_label">
           Extra history files (one path per line)
         </label>
         <textarea id="extra-files" rows="3"
           style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;resize:vertical;font-family:monospace;box-sizing:border-box"
-          placeholder="/path/to/History&#10;/path/to/places.sqlite"></textarea>
+          placeholder="/path/to/History&#10;/path/to/places.sqlite" data-i18n-placeholder="db.extra_files_placeholder"></textarea>
       </div>
 
       <div style="display:flex;gap:20px;margin-bottom:16px">
         <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-          <input type="checkbox" id="disable-detect"> Disable auto-detect
+          <input type="checkbox" id="disable-detect"> <span data-i18n="db.disable_detect">Disable auto-detect</span>
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-          <input type="checkbox" id="dry-run"> Dry run
+          <input type="checkbox" id="dry-run"> <span data-i18n="db.dry_run">Dry run</span>
         </label>
       </div>
 
-      <button class="btn" id="start-backup">Start Backup</button>
+      <button class="btn" id="start-backup" data-i18n="db.start_backup">Start Backup</button>
 
       <div id="backup-progress" style="display:none;margin-top:16px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
           <span id="backup-status-badge"
-            style="font-size:12px;padding:2px 8px;border-radius:20px;background:var(--accent);color:#fff">running</span>
-          <span style="font-size:13px;color:var(--text-muted)" id="backup-status-text">Backup in progress...</span>
+            style="font-size:12px;padding:2px 8px;border-radius:20px;background:var(--accent);color:#fff" data-i18n="db.status_running">running</span>
+          <span style="font-size:13px;color:var(--text-muted)" id="backup-status-text" data-i18n="db.progress_text_running">Backup in progress...</span>
         </div>
         <div id="backup-log"
           style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;max-height:200px;overflow-y:auto;font-family:monospace;font-size:12px"></div>
