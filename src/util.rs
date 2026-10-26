@@ -45,6 +45,10 @@ lazy_static! {
                     "edge-flatpak-linux",
                     ".var/app/com.microsoft.Edge/config/microsoft-edge/*/History",
                 ),
+                (
+                    "edge-windows",
+                    "AppData/Local/Microsoft/Edge/User Data/*/History",
+                ),
                 // Firefox
                 ("firefox-linux", ".mozilla/firefox/*/places.sqlite"),
                 (
